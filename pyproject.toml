@@ -1,0 +1,14 @@
+[project]
+name = "epub-tts-converter"
+version = "0.2.0"
+description = "Convert EPUB books into MP3 audio using Microsoft Edge TTS voices."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ebooklib>=0.18",
+    "beautifulsoup4>=4.12.0",
+    "edge-tts>=7.0.0",
+]
+
+[tool.ruff]
+line-length = 100
