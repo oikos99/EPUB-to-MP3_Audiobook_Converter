@@ -1,5 +1,9 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "epub-tts-converter"
+name = "epub-to-mp3-audiobook-converter"
 version = "0.2.0"
 description = "Convert EPUB books into MP3 audio using Microsoft Edge TTS voices."
 readme = "README.md"
@@ -9,6 +13,12 @@ dependencies = [
     "beautifulsoup4>=4.12.0",
     "edge-tts>=7.0.0",
 ]
+
+[project.scripts]
+epub-to-mp3 = "epub_to_mp3:main"
+
+[tool.setuptools]
+py-modules = ["epub_to_mp3"]
 
 [tool.ruff]
 line-length = 100

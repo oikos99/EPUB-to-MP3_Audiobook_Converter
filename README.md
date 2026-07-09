@@ -1,4 +1,4 @@
-# EPUB TTS Converter
+# EPUB to MP3 Audiobook Converter
 
 Convert EPUB books into chapter-by-chapter MP3 files using Microsoft Edge neural text-to-speech voices.
 
@@ -13,7 +13,8 @@ This repo is designed for personal audiobook generation from EPUB files, especia
 - Supports U.S. English voice presets
 - Lets you pass any raw Edge TTS voice name
 - Skips already-generated MP3 files so interrupted runs can resume
-- Works in a normal project-local Python virtual environment
+- Works in a project-local Python virtual environment
+- Can be run directly as a Python script or installed as a local CLI
 - No Docker required
 
 ## Voice Presets
@@ -29,6 +30,8 @@ This repo is designed for personal audiobook generation from EPUB files, especia
 
 `en-US` means English (United States). `zh-TW` means Taiwanese Mandarin / Traditional Chinese.
 
+Use Taiwan Mandarin voices for Chinese EPUBs and U.S. English voices for English EPUBs. English voices can read Chinese text, but pronunciation will usually be poor.
+
 You can also pass any valid Edge TTS voice name directly.
 
 To list available voices:
@@ -37,10 +40,16 @@ To list available voices:
 python epub_to_mp3.py --list-voices
 ```
 
+or, after installing the local CLI:
+
+```bash
+epub-to-mp3 --list-voices
+```
+
 ## Project Structure
 
 ```text
-epub-tts-converter/
+epub-to-mp3-audiobook-converter/
 ├── README.md
 ├── requirements.txt
 ├── pyproject.toml
@@ -55,9 +64,9 @@ epub-tts-converter/
 
 Put your EPUB files inside `books/`. Generated MP3 files are written to `mp3_output/` by default.
 
-## Setup Option 1: Terminal / GitHub Clone
+The `.gitignore` file is configured to keep `books/` and `mp3_output/` in the repo while ignoring actual `.epub` and generated audio files.
 
-Use this if you cloned the repo from GitHub or unzipped it into a version-controlled folder.
+## Setup
 
 Open a terminal in the project root folder. The project root is the folder that contains `README.md`, `requirements.txt`, and `epub_to_mp3.py`.
 
@@ -73,26 +82,27 @@ Create a project-local virtual environment:
 python3 -m venv .venv
 ```
 
-Activate it:
+Activate it on macOS/Linux:
 
 ```bash
 source .venv/bin/activate
 ```
 
-You should now see `(.venv)` in your terminal prompt, for example:
+You should now see `(.venv)` in your terminal prompt.
 
-```text
-(.venv) paulchiou@MacBookPro epub-tts-converter %
-```
-
-Upgrade pip and install dependencies:
+Upgrade pip:
 
 ```bash
 python -m pip install --upgrade pip
+```
+
+Install dependencies:
+
+```bash
 python -m pip install -r requirements.txt
 ```
 
-This installs packages only inside the project’s `.venv` folder. It does **not** install packages globally on your Mac.
+This installs packages only inside the project’s `.venv` folder. It does **not** install packages globally on your system.
 
 To deactivate the virtual environment later:
 
@@ -100,15 +110,37 @@ To deactivate the virtual environment later:
 deactivate
 ```
 
-Do not commit `.venv/` to GitHub. It is already listed in `.gitignore`.
+Do not commit `.venv/` to GitHub. It is listed in `.gitignore`.
 
-## Setup Option 2: PyCharm
+## Optional: Install as a Local CLI
 
-Use this if you want PyCharm to manage the project.
+The script can also be installed in editable mode so you can run it as `epub-to-mp3` instead of typing `python epub_to_mp3.py`.
 
-1. Open the repo folder in PyCharm.
-2. Go to `PyCharm → Settings → Project → Python Interpreter`.
-3. Choose or create the interpreter inside this project:
+With the virtual environment activated, run:
+
+```bash
+python -m pip install -e .
+```
+
+Then use:
+
+```bash
+epub-to-mp3 "books/your-book.epub" --voice tw-female
+```
+
+This still installs only inside the active `.venv`.
+
+## PyCharm Setup
+
+Open the repo folder in PyCharm.
+
+Then go to:
+
+```text
+PyCharm → Settings → Project → Python Interpreter
+```
+
+Choose or create the interpreter inside this project:
 
 ```text
 .venv/bin/python
@@ -117,7 +149,7 @@ Use this if you want PyCharm to manage the project.
 On macOS it will look similar to:
 
 ```text
-/Users/yourname/path/to/epub-tts-converter/.venv/bin/python
+/Users/yourname/path/to/project-folder/.venv/bin/python
 ```
 
 If you have not created `.venv` yet, create it in PyCharm using:
@@ -216,6 +248,12 @@ Regenerate files even if MP3s already exist:
 python epub_to_mp3.py "books/your-book.epub" --voice tw-female --overwrite
 ```
 
+If you installed the local CLI with `python -m pip install -e .`, replace `python epub_to_mp3.py` with `epub-to-mp3`:
+
+```bash
+epub-to-mp3 "books/your-book.epub" --voice tw-female
+```
+
 ## Output
 
 Example:
@@ -256,7 +294,7 @@ python -m pip install -r requirements.txt
 In PyCharm, the terminal should usually show something like:
 
 ```text
-(.venv) paulchiou@MacBookPro epub-tts-converter %
+(.venv) paulchiou@MacBookPro project-folder %
 ```
 
 ### `pip` installs globally instead of inside the project
@@ -277,7 +315,7 @@ which python
 It should point to:
 
 ```text
-.../epub-tts-converter/.venv/bin/python
+.../project-folder/.venv/bin/python
 ```
 
 ### Weird install errors with Python 3.13
